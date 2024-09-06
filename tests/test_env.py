@@ -11,6 +11,6 @@ import gym_blockpush  # noqa: F401
         ("BlockPush-v0", "state"),
     ],
 )
-def test_block_push(env_task, obs_type):
+def test_blockpush(env_task, obs_type):
     env = gym.make(f"gym_blockpush/{env_task}", obs_type=obs_type)
     check_env(env.unwrapped)

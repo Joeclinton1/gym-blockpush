@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "gym-block-push"
+name = "gym-blockpush"
 version = "0.1.0"
 description = "A gym environment for BlockPush"
 authors = [

@@ -3,7 +3,7 @@ import gymnasium as gym
 import numpy as np
 import gym_blockpush
 
-env = gym.make("gym_block_push/BlockPush-v0")
+env = gym.make("gym_blockpush/BlockPush-v0", obs_type="environment_state_agent_pos")
 observation, info = env.reset()
 frames = []
 

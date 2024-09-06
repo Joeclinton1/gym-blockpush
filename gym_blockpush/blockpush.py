@@ -150,6 +150,7 @@ class BlockPush(gym.Env):
         effector_height=None,
         visuals_mode="default",
         abs_action=False,
+        render_mode="rgb_array",
     ):
         """Creates an env instance.
 
@@ -232,6 +233,7 @@ class BlockPush(gym.Env):
         # Use saved_state and restore to make reset safe as no simulation state has
         # been updated at this state, but the assets are now loaded.
         self.save_state()
+        self.render_mode = render_mode
         self.reset()
 
     @property
@@ -530,12 +532,12 @@ class BlockPush(gym.Env):
         state = self._compute_state()
         return self._compute_goal_distance(state)
 
-    def render(self, mode="rgb_array"):
+    def render(self):
         # This allows rendering even for state-only obs, for visualization.
         image_size = self._image_size if self._image_size is not None else (IMAGE_HEIGHT, IMAGE_WIDTH)
 
         data = self._render_camera(image_size=(image_size[0], image_size[1]))
-        if mode == "human":
+        if self.render_mode == "human":
             if self.rendered_img is None:
                 self.rendered_img = plt.imshow(np.zeros((image_size[0], image_size[1], 4)))
             else:
@@ -712,6 +714,7 @@ class BlockPushNormalized(gym.Env):
         image_size=None,
         shared_memory=False,
         seed=None,
+        render_mode="rgb_array",
     ):
         """Creates an env instance.
 
@@ -732,7 +735,9 @@ class BlockPushNormalized(gym.Env):
             env_task = BlockTaskVariant.REACH
         else:
             raise ValueError("Unsupported task %s" % str(task))
-        self._env = BlockPush(control_frequency, env_task, image_size, shared_memory, seed)
+        self._env = BlockPush(
+            control_frequency, env_task, image_size, shared_memory, seed, render_mode=render_mode
+        )
         self.action_space = spaces.Box(low=-1, high=1, shape=(2,))
         self.observation_space = spaces.Dict(
             collections.OrderedDict(
@@ -743,6 +748,7 @@ class BlockPushNormalized(gym.Env):
                 target_orientation_cos_sin=spaces.Box(low=-1, high=1, shape=(2,)),
             )
         )
+        self.render_mode = render_mode
         self.reset()
 
     def get_control_frequency(self):
@@ -767,8 +773,8 @@ class BlockPushNormalized(gym.Env):
         reward = reward * 100  # Keep returns in [0, 100]
         return state, reward, done, False, info
 
-    def render(self, mode="rgb_array"):
-        return self._env.render(mode)
+    def render(self):
+        return self._env.render()
 
     def close(self):
         self._env.close()

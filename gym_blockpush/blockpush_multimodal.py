@@ -95,6 +95,7 @@ class BlockPushMultimodal(blockpush.BlockPush):
         control_frequency=10.0,
         task=blockpush.BlockTaskVariant.PUSH,
         obs_type="state",
+        render_mode="rgb_array",
         shared_memory=False,
         seed=None,
         goal_dist_tolerance=0.05,
@@ -118,6 +119,7 @@ class BlockPushMultimodal(blockpush.BlockPush):
         self._target_poses = None
         self._event_manager = BlockPushEventManager()
         self.obs_type = obs_type
+        self.render_mode = render_mode
         image_size = (
             (observation_height, observation_width)
             if self.obs_type in ["pixels", "pixels_agent_pos"]
